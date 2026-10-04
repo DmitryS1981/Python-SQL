@@ -1,4 +1,6 @@
 import psycopg
+from psycopg.rows import namedtuple_row
+
 
 conn = psycopg.connect("postgresql:///test")
 
@@ -26,6 +28,16 @@ def get_all_users(conn):
     with conn.cursor() as curs:
         curs.execute("SELECT id, name, email FROM users;")
         return curs.fetchall()
+
+def get_all_users_name(conn):
+    with conn.cursor(row_factory=namedtuple_row) as curs:
+        curs.execute("SELECT id, name, email FROM users;")
+        return curs.fetchall()
+
+def get_max_user_id(conn):
+    with conn.cursor(row_factory=namedtuple_row) as curs:
+        curs.execute("SELECT MAX(id) FROM users;")
+        return curs.fetchone()
 
 
 def main():
